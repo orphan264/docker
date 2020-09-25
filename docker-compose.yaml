@@ -7,6 +7,12 @@ services:
     command: -H unix:///var/run/docker.sock
     ports:
       - "9000:9000"
+#    healthcheck:
+#      test: curl --fail -s http://portainer:9000/ || exit 1
+#       test: ["CMD", "curl", "-f", "http://portainer:9000"]
+#      interval: 30s
+#      timeout: 30s
+#      retries: 3
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${USERDIR}/docker/portainer/data:/data
@@ -76,3 +82,17 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+  netdata:
+    restart: always
+    hostname: netdata
+    image: titpetric/netdata
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    ports:
+      - 19999:19999
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro

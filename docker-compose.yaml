@@ -61,6 +61,11 @@ services:
       - ${USERDIR}/docker/shared:/shared
     ports:
       - "8123:8123"
+    healthcheck:
+      test: curl --fail http://localhost:8123/ || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 3
     privileged: true
     environment:
       - PUID=${PUID}
@@ -77,6 +82,11 @@ services:
       - ${USERDIR}/docker/shared:/shared
     ports:
         - "8989:8989"
+    healthcheck:
+      test: curl --fail http://localhost:8989/ || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 3
     restart: always
     environment:
       - PUID=${PUID}
